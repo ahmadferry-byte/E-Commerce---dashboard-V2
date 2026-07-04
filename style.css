@@ -1,0 +1,134 @@
+/* ======================================================
+   E-Commerce Dashboard
+   Custom CSS
+====================================================== */
+
+body{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:#020617;
+}
+
+/* =========================================
+   Dropdown
+========================================= */
+
+select option{
+    background:#0b1329;
+    color:#f1f5f9;
+}
+
+/* =========================================
+   Glass Effect
+========================================= */
+
+.card,
+.kpi-card{
+
+    background:rgba(255,255,255,.03);
+
+    backdrop-filter:blur(10px);
+
+    -webkit-backdrop-filter:blur(10px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:.3s;
+
+}
+
+.card:hover,
+.kpi-card:hover{
+
+    background:rgba(255,255,255,.05);
+
+    border-color:rgba(255,255,255,.15);
+
+}
+
+/* =========================================
+   Scrollbar
+========================================= */
+
+::-webkit-scrollbar{
+
+    width:6px;
+
+    height:6px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#020617;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#1e293b;
+
+    border-radius:10px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#334155;
+
+}
+
+/* =========================================
+   Floating Animation
+========================================= */
+
+@keyframes floatElement{
+
+    0%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-3px);
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+    }
+
+}
+
+.animate-btn-float-1{
+
+    animation:floatElement 3s ease infinite;
+
+}
+
+.animate-btn-float-2{
+
+    animation:floatElement 3s ease infinite;
+
+    animation-delay:.5s;
+
+}
+
+/* =========================================
+   Sticky Table Header
+========================================= */
+
+table thead th{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+
+    background:#0d1117;
+
+}
