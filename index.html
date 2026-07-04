@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026</title>
+<link rel="icon"
+      href="https://drive.usercontent.google.com/uc?id=15FvSRFOcFsz-d3ahiKsANwjRocbDF-4d">
+<link rel="apple-touch-icon" href="https://drive.usercontent.google.com/uc?id=15FvSRFOcFsz-d3ahiKsANwjRocbDF-4d">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    select option { background-color: #0b1329; color: #f1f5f9; }
+    /* --- KODE TAMBAHAN UNTUK GLASSMORPHISM KOTAK KPI --- */
+    .card, .kpi-card { 
+      background: rgba(255, 255, 255, 0.03) !important;
+      backdrop-filter: blur(10px) !important;
+      -webkit-backdrop-filter: blur(10px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 12px; /* Membuat sudut kotak sedikit membulat halus */
+      transition: all 0.3s ease;
+    }
+
+    /* Efek tambahan jika kursor mouse menyentuh kotak KPI */
+    .card:hover, .kpi-card:hover {
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    /* Kustom Scrollbar untuk Estetika Gelap Premium */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #020617; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    /* Animasi Gerak Mengambang Lembut (Floating Effect) */
+    @keyframes floatElement {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-3px); }
+      100% { transform: translateY(0px); }
+    }
+    .animate-btn-float-1 {
+      animation: floatElement 3s ease-in-out infinite;
+    }
+    .animate-btn-float-2 {
+      animation: floatElement 3s ease-in-out infinite;
+      animation-delay: 0.5s;
+    }
+    /* ... kode desain Anda yang sudah ada ... */
+
+  /* Salin & tempel kode baru di bawah ini */
+  table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #0d1117; /* Warna background gelap dasbor Anda */
+    z-index: 10;
+  }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-teal-500/30 antialiased">
+
+  <div class="container mx-auto px-4 py-8 max-w-none w-full opx-8">
+   <header class="mb-8 pb-6 border-b border-slate-900 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+  <div>
+    <div class="flex items-center gap-2 mb-1">
+      <span class="h-2 w-2 rounded-full bg-teal-400 animate-pulse"></span>
+      <span class="text-xs font-semibold uppercase tracking-widest text-teal-400/80">RIZZ</span>
+    </div>
+    <h1 class="text-3xl font-bold bg-gradient-to-r from-teal-400 via-emerald-400 to-indigo-400 bg-clip-text text-transparent">
+      DATA E-Commerce 
+    </h1>
+    
+    <div class="mt-2 text-slate-300">
+      <h2 class="text-xl font-semibold flex items-center gap-2">
+        <span id="sapaan-text">Selamat Datang</span> <span class="text-teal-400">KRISNA SETIAWAN</span>
+      </h2>
+      <p class="text-xs text-slate-400 mt-1">
+        <span id="realtime-date">-</span> | <span id="realtime-clock" class="font-mono text-teal-400 font-semibold">-</span>
+      </p>
+    </div>
+    
+  </div>
+      
+      <div class="flex flex-wrap items-center gap-3">
+        <button onclick="downloadFilteredCSV()" class="animate-btn-float-1 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 hover:shadow-teal-950/40 hover:-translate-y-0.5 text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-300 flex items-center gap-2 cursor-pointer text-sm shadow-xl shadow-emerald-950/20 active:scale-95">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Download
+        </button>
+
+        <button onclick="loadData()" class="animate-btn-float-2 bg-slate-900 hover:bg-slate-800 hover:text-white hover:border-slate-700 hover:-translate-y-0.5 text-slate-300 font-medium px-4 py-2.5 rounded-xl border border-slate-800 transition-all duration-300 flex items-center gap-2 cursor-pointer text-sm active:scale-95 shadow-lg">
+          <svg id="refresh-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+          </svg>
+          Refresh
+        </button>
+      </div>
+    </header>
+
+    <section class="bg-slate-900/50 backdrop-blur-md border border-slate-900 rounded-2xl p-6 mb-8 shadow-2xl">
+      <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-[11px] font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Tahun</label>
+          <select id="filter-tahun" onchange="applyFilters()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 cursor-pointer transition">
+            <option value="ALL">Semua Tahun</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[11px] font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Bulan</label>
+          <select id="filter-bulan" onchange="applyFilters()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 cursor-pointer transition">
+            <option value="ALL">Semua Bulan</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[11px] font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Nama Toko</label>
+          <select id="filter-toko" onchange="applyFilters()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 cursor-pointer transition">
+            <option value="ALL">Semua Toko</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[11px] font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Jenis Barang</label>
+          <select id="filter-barang" onchange="applyFilters()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 cursor-pointer transition">
+            <option value="ALL">Semua Barang</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div class="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:col-span-1">
+        
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-900 rounded-2xl p-5 shadow-xl flex items-center justify-between relative overflow-hidden group hover:border-slate-800 transition-all duration-300">
+          <div>
+            <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Kunjungan Toko</p>
+            <h3 id="stat-total-rows" class="text-4xl font-extrabold text-teal-400 mt-2 tracking-tight transition-transform duration-300 group-hover:scale-105 origin-left">-</h3>
+          </div>
+          <div class="p-3 bg-teal-500/10 rounded-xl text-teal-400 border border-teal-500/10 shadow-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-900 rounded-2xl p-5 shadow-xl flex items-center justify-between relative overflow-hidden group hover:border-slate-800 transition-all duration-300">
+          <div>
+            <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Barang</p>
+            <h3 id="stat-total-qty" class="text-4xl font-extrabold text-emerald-400 mt-2 tracking-tight transition-transform duration-300 group-hover:scale-105 origin-left">-</h3>
+          </div>
+          <div class="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 border border-emerald-500/10 shadow-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+          </div>
+        </div>
+
+      </div>
+      
+      <div class="bg-slate-900/40 border border-slate-900 rounded-2xl p-5 shadow-xl lg:col-span-2 flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Distribusi Unit per Toko</h3>
+          <span class="w-2 h-2 rounded-full bg-teal-400 shadow-lg shadow-teal-500/50"></span>
+        </div>
+        <div class="relative w-full h-64">
+          <canvas id="tokoChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-slate-900/40 border border-slate-900 rounded-2xl shadow-2xl overflow-hidden mb-8">
+      <div class="p-5 border-b border-slate-900 bg-slate-900/60 flex justify-between items-center">
+        <div>
+          <h2 class="font-bold text-base text-slate-100">Log Barang</h2>
+          <p class="text-xs text-slate-400 mt-0.5">5 transaksi teratas</p>
+        </div>
+        <span id="loading-badge" class="text-[11px] bg-teal-500/10 text-teal-400 border border-teal-500/20 px-3 py-1 rounded-full animate-pulse font-medium">Sinkronisasi Data...</span>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-950/80 border-b border-slate-900 text-slate-400 text-xs uppercase tracking-wider font-semibold">
+              <th class="px-6 py-4">Tanggal</th>
+              <th class="px-6 py-4">Nama Toko</th>
+              <th class="px-6 py-4 text-center text-teal-400">QTY Regular</th>
+              <th class="px-6 py-4 text-center text-amber-400">QTY Other</th>
+              <th class="px-6 py-4 text-center text-rose-400">QTY Aftersales</th>
+              <th class="px-6 py-4">Detail Item</th>
+            </tr>
+          </thead>
+          <tbody id="table-body" class="divide-y divide-slate-900 text-sm text-slate-300 bg-slate-950/20"></tbody>
+        </table>
+      </div>
+      <div id="empty-state" class="hidden p-12 text-center text-slate-500 text-sm">Tidak ada catatan pengambilan yang cocok.</div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <div class="bg-slate-900/40 border border-slate-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col justify-between">
+        <div>
+          <div class="p-4 border-b border-slate-900 bg-teal-500/5 flex justify-between items-center">
+            <h2 class="font-bold text-xs uppercase tracking-wider text-teal-400 flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span> Khusus E-Commerce
+            </h2>
+            <div class="flex items-center gap-2">
+              <span id="count-reguler" class="text-[10px] bg-teal-500/10 text-teal-400 border border-teal-500/20 px-2 py-0.5 rounded-md font-bold">0 Toko</span>
+              <button onclick="downloadRegulerCSV()" class="bg-slate-900 hover:bg-slate-800 text-teal-400 border border-slate-800 p-1.5 rounded-lg transition cursor-pointer" title="Download Data Reguler">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="overflow-x-auto max-h-[300px] overflow-y-auto">
+            <table class="w-full text-left border-collapse">
+              <thead class="sticky top-0 bg-slate-950 z-10">
+                <tr class="border-b border-slate-900 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
+                  <th class="px-4 py-3">Tanggal</th>
+                  <th class="px-4 py-3">Nama Toko</th>
+                  <th class="px-4 py-3 text-center text-teal-400">QTY</th>
+                  <th class="px-4 py-3">Detail Item</th>
+                </tr>
+              </thead>
+              <tbody id="table-body-reguler" class="divide-y divide-slate-900 text-xs text-slate-300"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="empty-state-reguler" class="hidden p-8 text-center text-slate-600 text-xs">Kosong.</div>
+      </div>
+
+      <div class="bg-slate-900/40 border border-slate-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col justify-between">
+        <div>
+          <div class="p-4 border-b border-slate-900 bg-amber-500/5 flex justify-between items-center">
+            <h2 class="font-bold text-xs uppercase tracking-wider text-amber-400 flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>Khusus OTHER
+            </h2>
+            <div class="flex items-center gap-2">
+              <span id="count-other-after" class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md font-bold">0 Toko</span>
+              <button onclick="downloadOtherAfterCSV()" class="bg-slate-900 hover:bg-slate-800 text-amber-400 border border-slate-800 p-1.5 rounded-lg transition cursor-pointer" title="Download Data Other & Aftersales">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="overflow-x-auto max-h-[300px] overflow-y-auto">
+            <table class="w-full text-left border-collapse">
+              <thead class="sticky top-0 bg-slate-950 z-10">
+                <tr class="border-b border-slate-900 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
+                  <th class="px-4 py-3">Tanggal</th>
+                  <th class="px-4 py-3">Nama Toko</th>
+                  <th class="px-4 py-3 text-center text-orange-400">QTY</th>
+                  <th class="px-4 py-3">Detail Item</th>
+                </tr>
+              </thead>
+              <tbody id="table-body-other-after" class="divide-y divide-slate-900 text-xs text-slate-300"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="empty-state-other-after" class="hidden p-8 text-center text-slate-600 text-xs">Kosong.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let globalData = [];
+    let filteredData = [];
+    let myChart = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+    updateDateTime();
+
+    setInterval(updateDateTime,1000);
+
+    loadData();
+
+});
+  
+
+    function loadData() {
+      showLoading(true);
+      const API_URL = CONFIG.API_URL;
+
+fetch(API_URL)
+  .then(response => response.json())
+  .then(onSuccess)
+  .catch(onFailure);
+    }
+
+function onSuccess(response) {
+
+  console.log("1. Response:", response);
+
+  showLoading(false);
+
+  if (!response || !response.success) {
+    alert("Gagal mengambil data: " + (response ? response.message : "Tanpa respons"));
+    return;
+  }
+
+  globalData = response.data || [];
+
+  console.log("2. Jumlah Data:", globalData.length);
+
+  filteredData = [...globalData];
+
+  console.log("3. Sebelum buildDropdownOptions()");
+
+  buildDropdownOptions();
+
+  console.log("4. Setelah buildDropdownOptions()");
+
+  renderTableAndChart();
+
+  console.log("5. Setelah renderTableAndChart()");
+
+}
+
+    function onFailure(error) {
+      showLoading(false);
+      alert("Sistem Apps Script Error: " + error.message);
+    }
+
+    function buildDropdownOptions() {
+      const tahunSet = new Set();
+      const bulanSet = new Set();
+      const tokoSet = new Set();
+      const barangSet = new Set();
+
+      globalData.forEach(item => {
+        if(item.tahun) tahunSet.add(String(item.tahun).trim());
+        if(item.bulan !== undefined && item.bulan !== null) bulanSet.add(String(item.bulan).trim());
+        if(item.toko) tokoSet.add(String(item.toko).trim());
+        if(item.detail) barangSet.add(String(item.detail).trim());
+      });
+
+      const urutanBulan = {
+        'Januari': 1, 'Februari': 2, 'Maret': 3, 'April': 4, 'Mei': 5, 'Juni': 6,
+        'Juli': 7, 'Agustus': 8, 'September': 9, 'Oktober': 10, 'November': 11, 'Desember': 12
+      };
+
+      const bulanTerurut = Array.from(bulanSet).sort((a, b) => (urutanBulan[a] || 99) - (urutanBulan[b] || 99));
+
+      populateSelect('filter-tahun', Array.from(tahunSet).sort());
+      populateSelect('filter-bulan', bulanTerurut);
+      populateSelect('filter-toko', Array.from(tokoSet).sort());
+      populateSelect('filter-barang', Array.from(barangSet).sort());
+    }
+
+    function populateSelect(elementId, itemsArray) {
+      const select = document.getElementById(elementId);
+      if(!select) return;
+      select.innerHTML = select.options[0].outerHTML; 
+      
+      itemsArray.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item;
+        opt.innerText = item;
+        select.appendChild(opt);
+      });
+    }
+
+    function applyFilters() {
+      const valTahun = document.getElementById('filter-tahun').value;
+      const valBulan = document.getElementById('filter-bulan').value;
+      const valToko = document.getElementById('filter-toko').value;
+      const valBarang = document.getElementById('filter-barang').value;
+
+      filteredData = globalData.filter(item => {
+        const itemTahun = item.tahun ? String(item.tahun).trim() : '';
+        const itemBulan = item.bulan ? String(item.bulan).trim() : '';
+        const itemToko  = item.toko ? String(item.toko).trim() : '';
+        const itemBarang = item.detail ? String(item.detail).trim() : '';
+
+        return (valTahun === 'ALL' || itemTahun === valTahun) &&
+               (valBulan === 'ALL' || itemBulan === valBulan) &&
+               (valToko === 'ALL' || itemToko === valToko) &&
+               (valBarang === 'ALL' || itemBarang === valBarang);
+      });
+
+      renderTableAndChart();
+    }
+
+    function renderTableAndChart() {
+      const tableBody = document.getElementById('table-body');
+      const tableBodyReguler = document.getElementById('table-body-reguler');
+      const tableBodyOtherAfter = document.getElementById('table-body-other-after');
+      
+      const emptyState = document.getElementById('empty-state');
+      const emptyStateReguler = document.getElementById('empty-state-reguler');
+      const emptyStateOtherAfter = document.getElementById('empty-state-other-after');
+
+      if(tableBody) tableBody.innerHTML = '';
+      if(tableBodyReguler) tableBodyReguler.innerHTML = '';
+      if(tableBodyOtherAfter) tableBodyOtherAfter.innerHTML = '';
+      
+      if (!filteredData || filteredData.length === 0) {
+        if(emptyState) emptyState.classList.remove('hidden');
+        if(emptyStateReguler) emptyStateReguler.classList.remove('hidden');
+        if(emptyStateOtherAfter) emptyStateOtherAfter.classList.remove('hidden');
+        updateStats(0, 0);
+        updateChart({});
+        return;
+      }
+      
+      if(emptyState) emptyState.classList.add('hidden');
+      
+      let totalQtyAll = 0;
+      let countReguler = 0;
+      let countOtherAfter = 0;
+      let mainTableCount = 0; 
+      let chartSummary = {};
+
+      filteredData.forEach(row => {
+        const qtyTotal = Number(row.qtyTotal) || 0;
+        const qtyRegular = Number(row.qtyRegular) || 0;
+        const qtyOther = Number(row.qtyOther) || 0;
+        const qtyAftersales = Number(row.qtyAftersales) || 0;
+        
+        totalQtyAll += qtyTotal;
+        
+        if (row.toko) {
+          const tokoKey = String(row.toko).trim();
+          chartSummary[tokoKey] = (chartSummary[tokoKey] || 0) + qtyTotal;
+        }
+
+        if (mainTableCount < 5 && tableBody) {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-900/50 transition duration-150";
+          tr.innerHTML = `
+            <td class="px-6 py-4 font-medium text-slate-300">${row.tanggal || ''}</td>
+            <td class="px-6 py-4"><span class="bg-slate-900 text-slate-300 border border-slate-800 px-2 py-0.5 rounded text-xs">${row.toko || ''}</span></td>
+            <td class="px-6 py-4 text-center font-semibold text-teal-400">${qtyRegular || '-'}</td>
+            <td class="px-6 py-4 text-center font-semibold text-amber-400">${qtyOther || '-'}</td>
+            <td class="px-6 py-4 text-center font-semibold text-rose-400">${qtyAftersales || '-'}</td>
+            <td class="px-6 py-4 text-slate-400 truncate max-w-xs" title="${row.detail || ''}">${row.detail || ''}</td>
+          `;
+          tableBody.appendChild(tr);
+          mainTableCount++;
+        }
+
+        if (qtyRegular > 0 && tableBodyReguler) {
+          countReguler++;
+          const trReg = document.createElement('tr');
+          trReg.className = "hover:bg-slate-900/30 transition";
+          trReg.innerHTML = `
+            <td class="px-4 py-2 font-medium text-slate-300">${row.tanggal || ''}</td>
+            <td class="px-4 py-2 text-slate-400">${row.toko || ''}</td>
+            <td class="px-4 py-2 text-center font-bold text-teal-400">${qtyRegular}</td>
+            <td class="px-4 py-2 text-slate-400 truncate max-w-[120px]">${row.detail || ''}</td>
+          `;
+          tableBodyReguler.appendChild(trReg);
+        }
+
+        const tokoUpper = row.toko ? String(row.toko).toUpperCase().trim() : '';
+        if ((qtyOther > 0 || qtyAftersales > 0 || tokoUpper === 'OTHER' || tokoUpper === 'AFTERSALES') && tableBodyOtherAfter) {
+          countOtherAfter++;
+          const qtyDisplay = qtyOther > 0 ? qtyOther : qtyAftersales;
+          const qtyClass = qtyOther > 0 ? "text-amber-400" : "text-rose-400";
+          const trOtherAfter = document.createElement('tr');
+          trOtherAfter.className = "hover:bg-slate-900/30 transition";
+          trOtherAfter.innerHTML = `
+            <td class="px-4 py-2 font-medium text-slate-300">${row.tanggal || ''}</td>
+            <td class="px-4 py-2"><span class="text-[10px] font-bold text-slate-300">${row.toko || ''}</span></td>
+            <td class="px-4 py-2 text-center font-bold ${qtyClass}">${qtyDisplay}</td>
+            <td class="px-4 py-2 text-slate-400 truncate max-w-[120px]">${row.detail || ''}</td>
+          `;
+          tableBodyOtherAfter.appendChild(trOtherAfter);
+        }
+      });
+
+      if(emptyStateReguler) emptyStateReguler.classList.toggle('hidden', countReguler > 0);
+      if(emptyStateOtherAfter) emptyStateOtherAfter.classList.toggle('hidden', countOtherAfter > 0);
+
+      document.getElementById('count-reguler').innerText = `${countReguler} Baris`;
+      document.getElementById('count-other-after').innerText = `${countOtherAfter} Baris`;
+
+      updateStats(filteredData.length, totalQtyAll);
+      updateChart(chartSummary);
+    }
+
+    function downloadFilteredCSV() {
+      if (filteredData.length === 0) return alert("Tidak ada data terfilter.");
+      generateCSVAndDownload(filteredData, "Laporan_Utama_Terfilter");
+    }
+
+    function downloadRegulerCSV() {
+      const dataReguler = filteredData.filter(row => (Number(row.qtyRegular) || 0) > 0);
+      if (dataReguler.length === 0) return alert("Data reguler kosong.");
+      let csv = "data:text/csv;charset=utf-8,Tanggal,Nama Toko,QTY Reguler,Detail Item\n";
+      dataReguler.forEach(row => {
+        csv += `"${row.tanggal || ''}","${row.toko || ''}",${row.qtyRegular || 0},"${(row.detail || '').replace(/"/g, '""')}"\n`;
+      });
+      triggerDownload(csv, "Laporan_REGULER");
+    }
+
+    function downloadOtherAfterCSV() {
+      const dataOtherAfter = filteredData.filter(row => {
+        const qO = Number(row.qtyOther) || 0;
+        const qA = Number(row.qtyAftersales) || 0;
+        const tU = row.toko ? String(row.toko).toUpperCase().trim() : '';
+        return qO > 0 || qA > 0 || tU === 'OTHER' || tU === 'AFTERSALES' || tU === 'ONLINE';
+      });
+      if (dataOtherAfter.length === 0) return alert("Data gabungan kosong.");
+      let csv = "data:text/csv;charset=utf-8,Tanggal,Nama Toko,QTY,Detail Item\n";
+      dataOtherAfter.forEach(row => {
+        const qty = (Number(row.qtyOther) || 0) > 0 ? row.qtyOther : row.qtyAftersales;
+        csv += `"${row.tanggal || ''}","${row.toko || ''}",${qty || 0},"${(row.detail || '').replace(/"/g, '""')}"\n`;
+      });
+      triggerDownload(csv, "Laporan_OTHER_AFTERSALES");
+    }
+
+    function generateCSVAndDownload(data, fileNamePrefix) {
+      let csv = "data:text/csv;charset=utf-8,Tanggal,Nama Toko,QTY Regular,QTY OTHER,QTY AFTERSALES,Detail Item\n";
+      data.forEach(row => {
+        csv += `"${row.tanggal || ''}","${row.toko || ''}",${row.qtyRegular || 0},${row.qtyOther || 0},${row.qtyAftersales || 0},"${(row.detail || '').replace(/"/g, '""')}"\n`;
+      });
+      triggerDownload(csv, fileNamePrefix);
+    }
+
+    function triggerDownload(csvContent, fileNamePrefix) {
+      const link = document.createElement("a");
+      link.setAttribute("href", encodeURI(csvContent));
+      link.setAttribute("download", `${fileNamePrefix}_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function updateChart(chartData) {
+      const canvas = document.getElementById('tokoChart');
+      if(!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const labels = Object.keys(chartData);
+      const values = Object.values(chartData);
+
+      if (myChart) { myChart.destroy(); }
+
+      myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: 'rgba(20, 184, 166, 0.4)',
+            borderColor: 'rgba(20, 184, 166, 1)',
+            borderWidth: 1.5,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } },
+            y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b', font: { size: 10 } } }
+          }
+        }
+      });
+    }
+
+    function showLoading(isLoading) {
+      const badge = document.getElementById('loading-badge');
+      if(badge) badge.classList.toggle('hidden', !isLoading);
+      const icon = document.getElementById('refresh-icon');
+      if (icon) {
+        if (isLoading) icon.classList.add('animate-spin');
+        else icon.classList.remove('animate-spin');
+      }
+    }
+
+    function updateStats(totalRows, totalQty) {
+      document.getElementById('stat-total-rows').innerText = totalRows;
+      document.getElementById('stat-total-qty').innerText = totalQty;
+    }
+
+  // 🟢 TARUH KODE JAVASCRIPT JAM REALTIME DI SINI
+  function updateDateTime() {
+    const now = new Date();
+    const jam = now.getHours();
+    let sapaan = "";
+    
+    if (jam >= 5 && jam < 11) sapaan = "Selamat Pagi 🌅";
+    else if (jam >= 11 && jam < 15) sapaan = "Selamat Siang ☀️";
+    else if (jam >= 15 && jam < 18) sapaan = "Selamat Sore 🌇";
+    else sapaan = "Selamat Malam 🌙";
+    
+    document.getElementById('sapaan-text').innerText = sapaan;
+
+    const opsiTanggal = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+    document.getElementById('realtime-date').innerText = now.toLocaleDateString('id-ID', opsiTanggal);
+    document.getElementById('realtime-clock').innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+  }
+</script>
+
+<script src="config.js"></script>
+  
+</body>
+</html>
