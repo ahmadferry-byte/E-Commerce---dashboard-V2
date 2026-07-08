@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>E-Commerce Dashboard V2</title>
+
+    <!-- Favicon -->
+    <link rel="icon"
+          type="image/png"
+          href="assets/logo.png">
+
+    <!-- Google Font -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+<body>
+    <!-- Loading -->
+<div id="loadingScreen">
+
+    <div class="loader"></div>
+
+    <p>Memuat Dashboard...</p>
+
+</div>
+
+    <!-- HEADER -->
+<div class="app">
+
+<aside id="sidebar">
+
+    <div class="sidebar-header">
+
+        <img src="assets/logo.png" class="sidebar-logo">
+
+        <div>
+
+            <h2>RIZZ</h2>
+
+            <small>E-Commerce</small>
+
+        </div>
+
+    </div>
+
+    <nav class="sidebar-menu">
+
+        <a href="#" class="active">
+            <span class="icon">🏠</span>
+            <span class="text">Dashboard</span>
+        </a>
+
+        <a href="#">
+            <span class="icon">📊</span>
+            <span class="text">Analytics</span>
+        </a>
+
+        <a href="#">
+            <span class="icon">🏪</span>
+            <span class="text">Store</span>
+        </a>
+
+        <a href="#">
+            <span class="icon">📦</span>
+            <span class="text">Inventory</span>
+        </a>
+
+        <a href="#">
+            <span class="icon">📈</span>
+            <span class="text">Reports</span>
+        </a>
+
+        <a href="#">
+            <span class="icon">⚙</span>
+            <span class="text">Settings</span>
+        </a>
+
+    </nav>
+
+</aside>
+
+<div id="overlay"></div>
+
+<div class="main">
+
+        <header id="header">
+
+            <div class="header-left">
+
+                <img src="assets/logo.png"
+                     class="logo">
+
+                <div>
+
+                    <h1>E-Commerce Dashboard V2</h1>
+
+                    <p>Dashboard Monitoring Penjualan 2026</p>
+
+                </div>
+
+            </div>
+
+
+            <button id="menuToggle" class="menu-toggle">
+            ☰
+            </button>
+            <div class="header-right">
+
+                <div class="datetime">
+
+                    <div id="date"></div>
+
+                    <div id="clock"></div>
+
+                </div>
+
+                <button id="refreshBtn">
+
+                    <i class="fa-solid fa-rotate-right"></i>
+
+                </button>
+
+                <button id="themeBtn">
+
+                    <i class="fa-solid fa-moon"></i>
+
+                </button>
+
+                <div class="profile">
+
+                    <img src="assets/logo.png">
+
+                    <span>Ahmad Ferry</span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+<main id="content">
+
+    <!-- DASHBOARD TITLE -->
+
+    <section class="page-title">
+
+        <h2>Dashboard Overview</h2>
+
+        <p>Selamat datang di Dashboard Monitoring Penjualan E-Commerce 2026.</p>
+
+    </section>
+
+
+<div class="filter-grid">
+
+    <div class="filter-group">
+        <label>Tahun</label>
+        <select id="filterTahun"></select>
+    </div>
+
+    <div class="filter-group">
+        <label>Bulan</label>
+        <select id="filterBulan"></select>
+    </div>
+
+    <div class="filter-group">
+        <label>Toko</label>
+        <select id="filterToko"></select>
+    </div>
+
+    <div class="filter-group">
+        <label>Barang</label>
+        <select id="filterBarang"></select>
+    </div>
+
+</div>
+
+    <!-- KPI -->
+
+    <section class="kpi-grid">
+
+        <div class="kpi-card">
+            <h3>Total Data</h3>
+            <h1 id="totalData">0</h1>
+        </div>
+        <div class="kpi-card">
+            <h3>Total Barang</h3>
+            <h1 id="totalBarang">0</h1>
+        </div>
+        <div class="kpi-card">
+            <h3>Total Toko</h3>
+            <h1 id="totalToko">0</h1>
+        </div>
+        <div class="kpi-card">
+            <h3>Total Jenis</h3>
+            <h1 id="totalJenis">0</h1>
+        </div>
+
+    </section>
+
+
+    <!-- CHART -->
+
+<section class="chart-grid">
+
+    <!-- Pie Chart -->
+    <div class="chart-card">
+
+        <div class="chart-header">
+
+            <h3>Distribusi Penjualan</h3>
+
+            <button
+                id="downloadPie"
+                class="btn-chart">
+
+                ⬇ PNG
+
+            </button>
+
+        </div>
+
+        <div class="chart-body">
+
+            <canvas id="pieChart"></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- Line Chart -->
+    <div class="chart-card">
+
+        <div class="chart-header">
+
+            <h3>Grafik Bulanan</h3>
+
+            <button
+                id="downloadLine"
+                class="btn-chart">
+
+                ⬇ PNG
+
+            </button>
+
+        </div>
+
+        <div class="chart-body">
+
+            <canvas id="lineChart"></canvas>
+
+        </div>
+
+    </div>
+
+</section> 
+<section class="table-card">
+
+<div class="table-toolbar">
+
+    <div class="table-left">
+
+        <label>Show</label>
+
+        <select id="pageSize">
+
+            <option value="10">10</option>
+
+            <option value="25">25</option>
+
+            <option value="50">50</option>
+
+            <option value="100">100</option>
+
+        </select>
+
+        <label>entries</label>
+
+    </div>
+
+<div class="table-right">
+
+<button id="exportExcel" class="btn-export">
+    📥 Export Excel
+</button>
+
+<button id="exportPDF" class="btn-export pdf">
+    📄 Export PDF
+</button>
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="🔍 Cari toko / barang...">
+
+</div>
+
+</div>
+    <!-- TAMBAHKAN INI -->
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Tanggal</th>
+                    <th>Toko</th>
+                    <th>Barang</th>
+                    <th>Regular</th>
+                    <th>Other</th>
+                    <th>Aftersales</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody">
+
+            </tbody>
+            
+        </table>
+
+    </div>
+    <!-- SAMPAI SINI -->
+        <div class="table-footer">
+
+    <div id="tableInfo"></div>
+
+    <div id="pagination"></div>
+
+</div>
+
+    </section>
+
+</main>
+
+    </div>
+
+</div>
+<!-- CONFIG -->
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+<script src="js/config.js"></script>
+
+<!-- UTILS -->
+<script src="js/utils.js"></script>
+
+<!-- KPI -->
+<script src="js/kpi.js"></script>
+
+<!-- FILTER -->
+<script src="js/filter.js"></script>
+
+<!-- TABLE -->
+<script src="js/table.js"></script>
+<script src="js/search.js"></script>
+
+<!-- CHART -->
+<script src="js/chart.js"></script>
+
+<!-- EXPORT -->
+<script src="js/export.js"></script>
+
+<!-- SIDEBAR-->
+<script src="js/sidebar.js"></script>
+
+<!-- MAIN -->
+<script src="js/script.js"></script>
+
+</body>
+
+</html>
