@@ -15,6 +15,8 @@ function renderAnalytics(){
 
     renderTopBarangChart();
 
+    renderMonthlyTrend();
+
 
 }
 
